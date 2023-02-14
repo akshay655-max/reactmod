@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import {Link} from "react-router-dom"
+import {Link, useSearchParams} from "react-router-dom"
 import SearchData from '../components/SearchData';
 
 const getData=(url)=>{
@@ -7,34 +7,32 @@ const getData=(url)=>{
         return res.json();
     })
 }
+const getpagefromurl=(value)=>{
+    value=Number(value);
+    if(typeof value==="number" && value<=0){
+        value=1;
+    }
+    if(!value){
+        value=1;
+    }
+    return value;
+
+}
 
 const Pokemon = () => {
+    const[searchparams,setSearchparams]=useSearchParams();
     const [data,setData]=useState([]);
-    const[page,setPage]=useState(1);
+    const initialPage=getpagefromurl(searchparams.get("offset"))
+    const[page,setPage]=useState(initialPage);
     const[count,setCount]=useState("")
     const[name,setName]=useState("")
     const[singledata,setSingleData]=useState()
     const[loading,setLoading]=useState(false);
     const[error,setError]=useState(false)
-    const limit=20
+    const limit=10
 
     useEffect(()=>{
         let url=`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${page}`;
-      
-        if(name){
-            setData("");
-            getData(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res)=>{
-                console.log(res)
-                setLoading(true);
-                setError(false);
-                setSingleData(res)
-                setLoading(false);
-            }).catch((err)=>{
-                setLoading(false);
-                setError(true);
-                console.log(err)
-            })
-        }else{
             setLoading(true)
             setTimeout(()=>{
                 getData(url).then((res)=>{
@@ -49,10 +47,36 @@ const Pokemon = () => {
                     
                 })
             },1000)
-         
-        }
      
-    },[page,name])
+    },[page])
+
+    useEffect(()=>{
+        let paramObj;
+          if(page){
+            paramObj={
+                limit,
+                offset:page
+            }
+        }
+       
+         setSearchparams(paramObj)
+    },[page])
+
+
+    const handleClick=()=>{
+        setData("");
+        getData(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res)=>{
+            console.log(res)
+            setLoading(true);
+            setError(false);
+            setSingleData(res)
+            setLoading(false);
+        }).catch((err)=>{
+            setLoading(false);
+            setError(true);
+            console.log(err)
+        })
+    }
 
     if(loading){
         return <h1>Loading...</h1>
@@ -61,9 +85,9 @@ const Pokemon = () => {
   return (
     <>
     <h1>List of pokemon</h1>
-    <form  onSubmit={(e)=>e.preventDefault()}>
+  
     <input type="text" placeholder='search here' value={name} onChange={(e)=>setName(e.target.value)} />
-    </form>
+   <button onClick={handleClick} ><Link to={`/pokemon/${name}`}>Search</Link> </button>
     {
         error && <h1>data not found</h1>
     }
@@ -84,10 +108,17 @@ const Pokemon = () => {
     }
    
 
-  
-     <button  disabled={page===1}onClick={()=>setPage(page-1)}>Prev</button>
-     <button>{page}</button>
-     <button disabled={page===(Math.ceil(count/limit))}  onClick={()=>setPage(page+1)}>Next</button>
+  {
+      name==="" &&  <>
+       <button  disabled={page===1}onClick={()=>setPage(page-1)}>Prev</button>
+      <button>{page}</button>
+      <button disabled={page===(Math.ceil(count/limit))}  onClick={()=>setPage(page+1)}>Next</button>
+      
+      </>
+     
+  }
+    
+     
 
     </>
     
