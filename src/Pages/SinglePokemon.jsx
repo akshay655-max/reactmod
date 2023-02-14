@@ -39,7 +39,7 @@ const SinglePokemon = () => {
             }</p> 
           <p>Moves:{
           props?.moves?.map((ele)=>(
-                <span>{ele.name}</span>
+                <span>{ele.move.name}</span>
             ))
             }</p> 
          <p>Weight:{props?.weight}</p>
