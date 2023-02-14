@@ -26,24 +26,24 @@ const SinglePokemon = () => {
   
 
 <div >
-        <h1>{ props && props.name}</h1>
-         <img src={  props && props.species.url} alt="pokemon pic" />
-         <p>ID:{ props && props.id}</p>
-        <p>Base Experience:{ props && props.base_experience}</p> 
+        <h1>{props?.name}</h1>
+          {/* <img src={props?.species.url} alt="pokemon pic" /> */}
+         <p>ID:{props?.id}</p>
+        <p>Base Experience:{ props?.base_experience}</p> 
+       
       
-      
-        <p>Abilities:{
-           props &&   props.abilities.map((ele)=>(
+         <p>Abilities:{
+          props?.abilities?.map((ele)=>(
                 <span>{ele.ability.name}</span>
             ))
             }</p> 
-         <p>Moves:{
-          props &&    props.moves.map((ele)=>(
-                <span>{ele.move.name}</span>
+          <p>Moves:{
+          props?.moves?.map((ele)=>(
+                <span>{ele.name}</span>
             ))
             }</p> 
-         <p>Weight:{ props && props.weight}</p>
-         <p>Height:{ props && props.height}</p>
+         <p>Weight:{props?.weight}</p>
+         <p>Height:{props?.height}</p>
         </div>
 
 
