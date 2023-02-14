@@ -1,5 +1,5 @@
 import React, { useEffect ,useState} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams,Link } from 'react-router-dom'
 
 const SingleTypes = () => {
     const{name}=useParams();
@@ -14,13 +14,17 @@ const SingleTypes = () => {
       })
     },[name])
   return (
-    <>
+    <> 
+    <div  style={{width:"60%",margin:"auto",border:"1px solid red",boxShadow: "10px 5px 5px red"}}>
+    <Link to="/types">Go back</Link>
     <h1>{data.name}</h1>
     {
          data?.moves?.map((ele)=>(
             <span>{ele.name}</span>
         ))
     }
+    </div>
+
     </>
   )
 }

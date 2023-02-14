@@ -6,7 +6,7 @@ const SearchData = (props) => {
   return (
     <>
       
-      <div key={data.id} >
+      <div key={data.id}  >
         <h1>{data?.name}</h1>
           <img src={data?.species?.url} alt="pokemon pic" />
          <p>ID:{data?.id}</p>

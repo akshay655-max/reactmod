@@ -1,5 +1,5 @@
 import React, { useEffect ,useState} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams,Link } from 'react-router-dom'
 
 
 
@@ -20,12 +20,14 @@ const SinglePokemon = () => {
  
   return (
     <>
+    <Link></Link>
     <h1>pokemon</h1>
  
   
   
 
-<div >
+<div style={{width:"60%",margin:"auto",border:"1px solid red",boxShadow: "10px 5px 5px red"}} >
+    <Link to="/pokemon">Go back</Link>
         <h1>{props?.name}</h1>
           {/* <img src={props?.species.url} alt="pokemon pic" /> */}
          <p>ID:{props?.id}</p>

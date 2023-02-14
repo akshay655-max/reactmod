@@ -13,48 +13,66 @@ const Pokemon = () => {
     const[page,setPage]=useState(1);
     const[count,setCount]=useState("")
     const[name,setName]=useState("")
-    const[singledata,setSingleData]=useState("")
+    const[singledata,setSingleData]=useState()
+    const[loading,setLoading]=useState(false);
+    const[error,setError]=useState(false)
     const limit=20
 
     useEffect(()=>{
-      getData(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${page}`).then((res)=>{
-          setCount(res.count)
-          setData(res.results)
-      }).catch((err)=>{
-          console.log(err);
-      })
-    },[page])
-
-    const handleSearch=()=>{
-        setData("");
+        let url=`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${page}`;
+      
         if(name){
-            fetch(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res)=>{
-           
-            return res.json();
-        }).then((res)=>{
-            console.log(res)
-            setSingleData(res);
-           
-        }).catch((err)=>{
-            console.log(err)
-        })
+            setData("");
+            getData(`https://pokeapi.co/api/v2/pokemon/${name}`).then((res)=>{
+                console.log(res)
+                setLoading(true);
+                setError(false);
+                setSingleData(res)
+                setLoading(false);
+            }).catch((err)=>{
+                setLoading(false);
+                setError(true);
+                console.log(err)
+            })
         }else{
-            alert("please fill the input fields")
+            setLoading(true)
+            setTimeout(()=>{
+                getData(url).then((res)=>{
+                    setError(false);
+                    setCount(res.count)
+                    setData(res.results)
+                    setLoading(false);
+                }).catch((err)=>{
+                    setLoading(false);
+                    setError(true);
+                    console.log(err);
+                    
+                })
+            },1000)
+         
         }
-       
+     
+    },[page,name])
+
+    if(loading){
+        return <h1>Loading...</h1>
     }
-
-
 
   return (
     <>
     <h1>List of pokemon</h1>
-    <input type="text" placeholder='name' onChange={(e)=>setName(e.target.value)} />
-    <button onClick={handleSearch}>Search</button>
+    <form  onSubmit={(e)=>e.preventDefault()}>
+    <input type="text" placeholder='search here' value={name} onChange={(e)=>setName(e.target.value)} />
+    </form>
+    {
+        error && <h1>data not found</h1>
+    }
+
+  
     {
         data && data.map((ele)=>(
-            <div>
-                <p>{ele.name}</p>
+            <div key={ele.name} style={{width:"40%",margin:"auto",marginTop:"10px",boxShadow: "10px 5px 5px red"}}>
+                <h1>{ele.name}</h1>
                 <img src={ele.url} alt="pokeman-pic" />
                 <p><Link to={`/pokemon/${ele.name}`}> More details</Link></p>
             </div>

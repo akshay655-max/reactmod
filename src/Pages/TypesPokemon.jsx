@@ -31,7 +31,7 @@ const TypesPokemon = () => {
     
      {
         data && data.map((ele)=>(
-            <div key={ele.name}>
+            <div key={ele.name}  style={{width:"40%",margin:"auto",marginTop:"10px",boxShadow: "10px 5px 5px red"}}>
                  <h1>{ele.name}</h1>
                 <img src={ele.url} alt="type" />
                <p> <Link to={`/types/${ele.name}`}>More details</Link></p>
